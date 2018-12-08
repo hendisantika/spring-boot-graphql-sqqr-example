@@ -1,5 +1,6 @@
 package com.hendisantika.graphql.springbootgraphqlsqqrexample.entity;
 
+import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -24,6 +25,9 @@ import javax.persistence.Id;
 public class Car {
     @Id
     @GeneratedValue
+    @GraphQLQuery(name = "id", description = "A car's id")
     private Long id;
+
+    @GraphQLQuery(name = "name", description = "A car's name")
     private @NonNull String name;
 }
