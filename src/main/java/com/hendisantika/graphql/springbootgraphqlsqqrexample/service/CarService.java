@@ -2,6 +2,9 @@ package com.hendisantika.graphql.springbootgraphqlsqqrexample.service;
 
 import com.hendisantika.graphql.springbootgraphqlsqqrexample.entity.Car;
 import com.hendisantika.graphql.springbootgraphqlsqqrexample.repository.CarRepository;
+import io.leangen.graphql.annotations.GraphQLArgument;
+import io.leangen.graphql.annotations.GraphQLMutation;
+import io.leangen.graphql.annotations.GraphQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +29,23 @@ public class CarService {
     @Autowired
     CarRepository carRepository;
 
+    @GraphQLQuery(name = "cars")
     public List<Car> getCars() {
         return carRepository.findAll();
     }
 
-    public Optional<Car> getCarById(Long id) {
+    @GraphQLQuery(name = "car")
+    public Optional<Car> getCarById(@GraphQLArgument(name = "id") Long id) {
         return carRepository.findById(id);
     }
 
-    public Car saveCar(Car car) {
+    @GraphQLMutation(name = "saveCar")
+    public Car saveCar(@GraphQLArgument(name = "car") Car car) {
         return carRepository.save(car);
     }
 
-    public void deleteCar(Long id) {
+    @GraphQLMutation(name = "deleteCar")
+    public void deleteCar(@GraphQLArgument(name = "id") Long id) {
         carRepository.deleteById(id);
     }
 }
