@@ -3,11 +3,11 @@ package com.hendisantika.graphql.springbootgraphqlsqqrexample.service;
 import com.hendisantika.graphql.springbootgraphqlsqqrexample.entity.Car;
 import com.hendisantika.graphql.springbootgraphqlsqqrexample.repository.CarRepository;
 import io.leangen.graphql.annotations.GraphQLArgument;
+import io.leangen.graphql.annotations.GraphQLContext;
 import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLQuery;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +23,15 @@ import java.util.Optional;
  * To change this template use File | Settings | File Templates.
  */
 @Service
-@Transactional
 public class CarService {
 
-    @Autowired
-    CarRepository carRepository;
+    private final CarRepository carRepository;
+    private final GiphyService giphyService;
+
+    public CarService(CarRepository carRepository, GiphyService giphyService) {
+        this.carRepository = carRepository;
+        this.giphyService = giphyService;
+    }
 
     @GraphQLQuery(name = "cars")
     public List<Car> getCars() {
@@ -47,5 +51,23 @@ public class CarService {
     @GraphQLMutation(name = "deleteCar")
     public void deleteCar(@GraphQLArgument(name = "id") Long id) {
         carRepository.deleteById(id);
+    }
+
+    @GraphQLQuery(name = "isCool")
+    public boolean isCool(@GraphQLContext Car car) {
+        return !car.getName().equals("AMC Gremlin") &&
+                !car.getName().equals("Triumph Stag") &&
+                !car.getName().equals("Ford Pinto") &&
+                !car.getName().equals("Yugo GV");
+    }
+
+    @GraphQLQuery(name = "giphyUrl")
+    public String getGiphyUrl(@GraphQLContext Car car) {
+        return giphyService.getGiphyUrl(car.getName());
+    }
+
+    @GraphQLQuery
+    public Pageable page(@GraphQLArgument(name = "paging") Pageable page) {
+        return page;
     }
 }

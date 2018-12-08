@@ -18,7 +18,8 @@ import javax.persistence.Id;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
